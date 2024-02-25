@@ -1,4 +1,4 @@
-FROM php:alpine
+FROM php:fpm-alpine
 
 LABEL maintainer="trinami <github.com/trinami>"
 
