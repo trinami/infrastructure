@@ -2,7 +2,8 @@
 
 This repo aims to build the hole Trinami Infrastructure with just a single command
 
-0. Init ```bash
+0. Init
+```bash
 #create a secrets.yaml with values:
 cloudflare_api_token: "********"
 hetzner_api_token: "********"
@@ -15,13 +16,15 @@ sops -e -p KEYID secrets.yaml > secrets.enc.yaml
 #install fluxcd
 ```
 
-1. Setup ```bash
+1. Setup
+```bash
 terraform init
 terraform plan
 terraform apply
 ```
 
-2. Get kubeconfig access ```bash
+2. Get kubeconfig access
+```bash
 terraform output --raw kubeconfig > ~/.kube/config
 ```
 
