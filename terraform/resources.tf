@@ -56,23 +56,19 @@ resource "flux_bootstrap_git" "this" {
 
 resource "kubernetes_namespace" "cert_manager" {
   depends_on = [flux_bootstrap_git.this]
+  count = data.kubernetes_namespace.cert_manager ? 0 : 1
+
   metadata {
     name = "cert-manager"
-  }
-
-  lifecycle {
-    ignore_changes = all
   }
 }
 
 resource "kubernetes_namespace" "nginx" {
   depends_on = [flux_bootstrap_git.this]
+  count = data.kubernetes_namespace.nginx ? 0 : 1
+
   metadata {
     name = "nginx"
-  }
-
-  lifecycle {
-    ignore_changes = all
   }
 }
 
