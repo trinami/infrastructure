@@ -60,3 +60,47 @@ resource "flux_bootstrap_git" "this" {
   embedded_manifests = true
   path               = "flux/clusters"
 }
+
+resource "kubernetes_namespace" "cert_manager" {
+  depends_on = [flux_bootstrap_git.this]
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "kubernetes_namespace" "nginx" {
+  depends_on = [flux_bootstrap_git.this]
+  metadata {
+    name = "nginx"
+  }
+}
+
+resource "kubernetes_secret" "cloudflare_dns" {
+  depends_on = [kubernetes_namespace.cert_manager]
+  metadata {
+    name      = "cloudflare-dns"
+    namespace = "cert-manager"
+  }
+
+  data = {
+    cloudflare-apikey = data.sops_file.secrets.data["cloudflare_api_token"]
+  }
+
+  type = "Opaque"
+}
+
+resource "kubernetes_secret" "onion_secret" {
+  depends_on = [kubernetes_namespace.nginx]
+  metadata {
+    name      = "onion-secret"
+    namespace = "nginx"
+  }
+
+  data = {
+    privateKeyFile = base64encode(data.sops_file.onion.data)
+    publicKeyFile  = base64encode(file("${path.module}/trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_public_key"))
+    onionAddress   = base64encode(file("${path.module}/trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hostname"))
+  }
+
+  type = "Opaque"
+}
