@@ -10,11 +10,11 @@ provider "flux" {
   kubernetes = {
     load_config_file = false
 
-    host = module.kube-hetzner.kubeconfig.clusters[1].cluster.server
-    cluster_ca_certificate = base64decode(module.kube-hetzner.kubeconfig.clusters[1].cluster.certificate-authority-data)
+    host = yamldecode(module.kube-hetzner.kubeconfig).clusters[0].cluster.server
+    cluster_ca_certificate = base64decode(yamldecode(module.kube-hetzner.kubeconfig).clusters[0].cluster.certificate-authority-data)
 
-    client_certificate = base64decode(module.kube-hetzner.kubeconfig.users[1].user.client-certificate-data)
-    client_key = base64decode(module.kube-hetzner.kubeconfig.users[1].user.client-key-data)
+    client_certificate = base64decode(yamldecode(module.kube-hetzner.kubeconfig).users[0].user.client-certificate-data)
+    client_key = base64decode(yamldecode(module.kube-hetzner.kubeconfig).users[0].user.client-key-data)
   }
   git = {
     url = "https://github.com/${var.github_org}/${var.github_repository}.git"
