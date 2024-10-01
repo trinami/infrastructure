@@ -45,14 +45,16 @@ resource "local_file" "output_file" {
   content  = module.kube-hetzner.kubeconfig
 }
 
-resource "github_repository" "trinami" {
+resource "github_repository" "this" {
   name        = var.github_repository
   description = var.github_repository
+  visibility  = "public"
+  auto_init   = true
 }
 
-resource "flux_bootstrap_git" "trinami" {
-  depends_on = [github_repository.trinami]
+resource "flux_bootstrap_git" "this" {
+  depends_on = [github_repository.this]
 
   embedded_manifests = true
-  path               = "clusters/base"
+  path               = "flux/clusters"
 }

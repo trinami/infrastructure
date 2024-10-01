@@ -13,7 +13,7 @@ provider "flux" {
   git = {
     url = "https://github.com/${var.github_org}/${var.github_repository}.git"
     http = {
-      username = "fluxcd"
+      username = "trinami"
       password = data.sops_file.secrets.data["github_token"]
     }
   }
