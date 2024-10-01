@@ -41,7 +41,7 @@ resource "cloudflare_record" "org_wildcard_aaaa" {
 resource "local_file" "kubeconfig" {
   depends_on = [module.kube-hetzner]
 
-  filename = "~/.kube/config"
+  filename = "/home/${data.external.env.result.user}/.kube/config"
   content  = module.kube-hetzner.kubeconfig
 }
 
