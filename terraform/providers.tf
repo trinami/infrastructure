@@ -2,17 +2,19 @@ provider "hcloud" {
   token = data.sops_file.secrets.data["hetzner_api_token"]
 }
 
-provider "kubernetes" {
-  config_path = "${local_file.kubeconfig.filename}"
-}
-
 provider "cloudflare" {
   api_token = data.sops_file.secrets.data["cloudflare_api_token"]
 }
 
 provider "flux" {
   kubernetes = {
-    config_path = "${local_file.kubeconfig.filename}"
+    load_config_file = false
+
+    host = local.kube_config.clusters[1].cluster.server
+    cluster_ca_certificate = base64decode(module.kube-hetzner.kubeconfig.clusters[1].cluster.certificate-authority-data)
+
+    client_certificate = base64decode(module.kube-hetzner.kubeconfig.users[1].user.client-certificate-data)
+    client_key = base64decode(module.kube-hetzner.kubeconfig.users[1].user.client-key-data)
   }
   git = {
     url = "https://github.com/${var.github_org}/${var.github_repository}.git"
