@@ -43,8 +43,8 @@ resource "cloudflare_record" "org_wildcard_aaaa" {
 resource "local_file" "output_file" {
   depends_on = [module.kube-hetzner]
 
-  filename = "${path.home}/.kube/config"
-  content  = output.kubeconfig.value
+  filename = "/home/${data.external.env.result}/.kube/config"
+  content  = module.kube-hetzner.kubeconfig
 }
 
 resource "github_repository" "trinami" {
