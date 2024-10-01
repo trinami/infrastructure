@@ -6,6 +6,14 @@ provider "cloudflare" {
   api_token = data.sops_file.secrets.data["cloudflare_api_token"]
 }
 
+provider "kubernetes" {
+    host = yamldecode(module.kube-hetzner.kubeconfig).clusters[0].cluster.server
+    cluster_ca_certificate = base64decode(yamldecode(module.kube-hetzner.kubeconfig).clusters[0].cluster.certificate-authority-data)
+
+    client_certificate = base64decode(yamldecode(module.kube-hetzner.kubeconfig).users[0].user.client-certificate-data)
+    client_key = base64decode(yamldecode(module.kube-hetzner.kubeconfig).users[0].user.client-key-data)
+}
+
 provider "flux" {
   kubernetes = {
     load_config_file = false
