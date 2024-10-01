@@ -38,15 +38,15 @@ resource "cloudflare_record" "org_wildcard_aaaa" {
   allow_overwrite = true
 }
 
-resource "local_file" "output_file" {
+resource "local_file" "kubeconfig" {
   depends_on = [module.kube-hetzner]
 
-  filename = "/home/${data.external.env.result.user}/.kube/config"
+  filename = "~/.kube/config"
   content  = module.kube-hetzner.kubeconfig
 }
 
 resource "github_repository" "this" {
-  depends_on = [local_file.output_file]
+  depends_on = [local_file.kubeconfig]
 
   name        = var.github_repository
   description = var.github_repository

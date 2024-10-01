@@ -5,6 +5,10 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = ">= 1.45.0"
     }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.32.0"
+    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "~> 4.0"
