@@ -97,7 +97,7 @@ resource "kubernetes_secret" "onion_secret" {
   }
 
   data = {
-    privateKeyFile = data.sops_file.onion.data
+    privateKeyFile = data.sops_file.secrets.data["onion_secret"]
     publicKeyFile  = filebase64("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_public_key")
     onionAddress   = base64encode(file("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hostname"))
   }
