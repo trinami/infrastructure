@@ -20,6 +20,7 @@ sops -e -p KEYID secrets.yaml > secrets.enc.yaml
 ```bash
 terraform init
 terraform plan
+terraform import github_repository.this infrastructure
 terraform apply
 ```
 
