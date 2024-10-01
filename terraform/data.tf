@@ -3,7 +3,7 @@ data "sops_file" "secrets" {
 }
 
 data "sops_file" "onion" {
-  source_file = "trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_secret_key.enc.json"
+  source_file = "trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_private_key_base64.enc.json"
 }
 
 data "external" "env" {
