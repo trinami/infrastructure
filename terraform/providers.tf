@@ -10,7 +10,7 @@ provider "flux" {
   kubernetes = {
     load_config_file = false
 
-    host = local.kube_config.clusters[1].cluster.server
+    host = module.kube-hetzner.kubeconfig.clusters[1].cluster.server
     cluster_ca_certificate = base64decode(module.kube-hetzner.kubeconfig.clusters[1].cluster.certificate-authority-data)
 
     client_certificate = base64decode(module.kube-hetzner.kubeconfig.users[1].user.client-certificate-data)
