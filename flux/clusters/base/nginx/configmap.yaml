@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-ingress-nginx-controller
+  namespace: nginx
+data:
+  ssl-ciphers: "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305"
+  ssl-protocols: "TLSv1.3"
+  ssl-ecdh-curve: "X25519"
+  allow-snippet-annotations: "true"
+  enable-brotli: "true"
+  brotli-level: "6"
+  brotli-types: "text/html text/xml image/svg+xml application/x-font-ttf image/vnd.microsoft.icon application/x-font-opentype application/json font/eot application/vnd.ms-fontobject application/javascript font/otf application/xml application/xhtml+xml text/javascript application/x-javascript text/plain application/x-font-truetype application/xml+rss image/x-icon font/opentype text/css image/x-win-bitmap"
+  keep-alive: "300"
+  server-name-hash-bucket-size: "128"
