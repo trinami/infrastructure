@@ -8,7 +8,7 @@ provider "cloudflare" {
 
 provider "flux" {
   kubernetes = {
-    config_path = "/home/${data.external.env.result}/.kube/config"
+    config_path = "/home/${data.external.env.result.user}/.kube/config"
   }
   git = {
     url = "https://github.com/${var.github_org}/${var.github_repository}.git"

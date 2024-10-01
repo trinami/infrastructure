@@ -1,5 +1,3 @@
-
-
 resource "cloudflare_record" "org_root_a" {
   depends_on = [module.kube-hetzner]
   zone_id = data.sops_file.secrets.data["trinami_org_zone_id"]
@@ -43,15 +41,13 @@ resource "cloudflare_record" "org_wildcard_aaaa" {
 resource "local_file" "output_file" {
   depends_on = [module.kube-hetzner]
 
-  filename = "/home/${data.external.env.result}/.kube/config"
+  filename = "/home/${data.external.env.result.user}/.kube/config"
   content  = module.kube-hetzner.kubeconfig
 }
 
 resource "github_repository" "trinami" {
   name        = var.github_repository
   description = var.github_repository
-  visibility  = "public"
-  auto_init   = true
 }
 
 resource "flux_bootstrap_git" "trinami" {
