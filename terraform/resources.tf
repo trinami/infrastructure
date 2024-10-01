@@ -56,7 +56,7 @@ resource "flux_bootstrap_git" "this" {
 
 resource "kubernetes_namespace" "cert_manager" {
   depends_on = [flux_bootstrap_git.this]
-  count = data.kubernetes_namespace.cert_manager ? 0 : 1
+  count = length(try(data.kubernetes_namespace.cert_manager.metadata[0], [])) > 0 ? 0 : 1
 
   metadata {
     name = "cert-manager"
@@ -65,7 +65,7 @@ resource "kubernetes_namespace" "cert_manager" {
 
 resource "kubernetes_namespace" "nginx" {
   depends_on = [flux_bootstrap_git.this]
-  count = data.kubernetes_namespace.nginx ? 0 : 1
+  count = length(try(data.kubernetes_namespace.nginx.metadata[0], [])) > 0 ? 0 : 1
 
   metadata {
     name = "nginx"
