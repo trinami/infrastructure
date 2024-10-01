@@ -59,12 +59,20 @@ resource "kubernetes_namespace" "cert_manager" {
   metadata {
     name = "cert-manager"
   }
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "kubernetes_namespace" "nginx" {
   depends_on = [flux_bootstrap_git.this]
   metadata {
     name = "nginx"
+  }
+
+  lifecycle {
+    ignore_changes = all
   }
 }
 
