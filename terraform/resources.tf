@@ -46,6 +46,8 @@ resource "local_file" "output_file" {
 }
 
 resource "github_repository" "this" {
+  depends_on = [local_file.output_file]
+
   name        = var.github_repository
   description = var.github_repository
   visibility  = "public"
