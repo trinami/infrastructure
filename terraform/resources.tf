@@ -59,13 +59,6 @@ resource "flux_bootstrap_git" "this" {
 
   embedded_manifests = true
   path               = "flux/clusters"
-
-  components = [
-    "source-controller",
-    "kustomize-controller",
-    "helm-controller",
-    "notification-controller",
-  ]
 }
 
 resource "kubernetes_namespace" "cert_manager" {
