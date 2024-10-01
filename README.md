@@ -9,6 +9,8 @@ cloudflare_api_token: "********"
 hetzner_api_token: "********"
 trinami_org_zone_id: "********"
 trinami_zip_zone_id: "********"
+github_token: "********"
+onion_key: "********"
 
 #install sops and encrypt the secrets
 sops -e -p KEYID secrets.yaml > secrets.enc.yaml
