@@ -1,0 +1,29 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tor-controller
+  namespace: nginx
+spec:
+  interval: 10m
+  timeout: 5m
+  chart:
+    spec:
+      chart: tor-controller
+      version: '*'
+      sourceRef:
+        kind: HelmRepository
+        name: tor-controller
+      interval: 5m
+  releaseName: tor-controller
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  test:
+    enable: true
+  driftDetection:
+    mode: enabled
+  values:
+    replicaCount: 1
