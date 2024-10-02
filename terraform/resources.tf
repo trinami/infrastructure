@@ -94,10 +94,12 @@ resource "kubernetes_secret" "onion_secret" {
   }
 
   data = {
-    privateKeyFile = data.sops_file.secrets.data["onion_key"]
-    publicKeyFile  = filebase64("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_public_key")
-    onionAddress   = base64encode(file("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hostname"))
+    onionAddress   = file("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hostname")
   }
+  binary_data = {
+    publicKeyFile  = filebase64("trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion/hs_ed25519_public_key")
+    privateKeyFile = data.sops_file.secrets.data["onion_key"]
+  }     
 
   type = "Opaque"
 }
