@@ -1,0 +1,29 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reflector
+  namespace: emberstack
+spec:
+  interval: 10m
+  timeout: 5m
+  chart:
+    spec:
+      chart: reflector
+      version: '*'
+      sourceRef:
+        kind: HelmRepository
+        name: emberstack
+      interval: 5m
+  releaseName: reflector
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  test:
+    enable: true
+  driftDetection:
+    mode: enabled
+  values:
+    replicaCount: 1
