@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: www
+  name: www
+  namespace: www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: www
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: www
+    spec:
+#      runtimeClassName: gvisor
+      containers:
+      - name: phalcon-php-fpm
+        image: trinami/phalcon:alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d/nginx.conf
+          subPath: nginx.conf
+        - name: www-pvc
+          mountPath: /app/
+      - name: www
+        image: nginx:alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d/nginx.conf
+          subPath: nginx.conf
+        - name: www-pvc
+          mountPath: /app/
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: www-pvc
+        persistentVolumeClaim:
+          claimName: www-pvc
+      - name: nginx-config-volume
+        configMap:
+          name: www-nginx.conf

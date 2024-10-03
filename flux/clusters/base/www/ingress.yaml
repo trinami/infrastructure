@@ -1,0 +1,103 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "server: hide";
+      more_set_headers "server: hide";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Xss-Protection: 0";
+      more_set_headers "Referrer-Policy: same-origin";
+      more_set_headers "Permissions-Policy: camera=(\"https://meet.trinami.zip\" \"https://meet.trinami.org\" \"http://meet.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\"),microphone=(\"https://meet.trinami.zip\" \"https://meet.trinami.org\" \"http://meet.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\"),usb=(\"https://crypt.trinami.zip\" \"https://crypt.trinami.org\" \"http://crypt.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\")";      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+      #more_set_headers "Content-Security-Policy: default-src 'self' https://trinami.org https://trinami.zip";
+      more_set_headers "Content-Security-Policy: default-src 'self' https://trinami.org https://trinami.zip; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://trinami.org https://trinami.zip";
+      more_set_headers "Cross-Origin-Resource-Policy: same-site";
+      more_set_headers "Cross-Origin-Embedder-Policy: require-corp";
+      more_set_headers "Cross-Origin-Opener-Policy: same-origin";
+      more_set_headers "Cache-Control: max-age=31536000";
+      more_set_headers "Onion-Location: http://trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion$request_uri";
+      more_clear_headers "X-Powered-By";
+  name: www
+  namespace: www
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: www
+      port:
+        number: 80
+  rules:
+  - host: trinami.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: www
+            port:
+              number: 80
+  - host: trinami.zip
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: www
+            port:
+              number: 80
+  tls:
+    - hosts:
+        - "trinami.org"
+      secretName: trinami.org.source
+    - hosts:
+        - "trinami.zip"
+      secretName: trinami.zip.source
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "server: hide";
+      more_set_headers "server: hide";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Xss-Protection: 0";
+      more_set_headers "Referrer-Policy: same-origin";
+      more_set_headers "Permissions-Policy: camera=(\"https://meet.trinami.zip\" \"https://meet.trinami.org\" \"http://meet.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\"),microphone=(\"https://meet.trinami.zip\" \"https://meet.trinami.org\" \"http://meet.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\"),usb=(\"https://crypt.trinami.zip\" \"https://crypt.trinami.org\" \"http://crypt.trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion\")";
+      more_set_headers "Content-Security-Policy: default-src 'self' https://trinami.org https://trinami.zip http://trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion";
+      more_set_headers "Cross-Origin-Resource-Policy: same-site";
+      more_set_headers "Cross-Origin-Embedder-Policy: require-corp";
+      more_set_headers "Cross-Origin-Opener-Policy: same-origin";
+      more_set_headers "Cache-Control: max-age=31536000";
+      more_set_headers "Onion-Location: http://trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion$request_uri";
+      more_clear_headers "X-Powered-By";
+  name: www-onion
+  namespace: www
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: www
+      port:
+        number: 80
+  rules:
+  - host: 'trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion'
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: www
+            port:
+              number: 80
