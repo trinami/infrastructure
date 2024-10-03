@@ -1,15 +1,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: deploy-yaml
+  name: deploy-onion
   namespace: flux-system
 spec:
   dependsOn:
-    - name: tor-controller
-      namespace: tor-controller
+    - name: tor-controller-crds
+      namespace: flux-system
   interval: 5m
-  path: nginx/onionservice.yaml
+  path: ./base/nginx/onionservice.yaml
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
+    namespace: flux-system
