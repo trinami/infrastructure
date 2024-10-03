@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: trinami.onion-secret
+  namespace: www
+spec:
+  dnsNames:
+  - trinamiggfqxmyuyipkol3svqfzecuriywhiqlzcawknhtgivj3wkxad.onion
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  secretName: trinami.onion-secret
+  privateKey:
+    algorithm: Ed25519
+  usages:
+  - digital signature
+  - key encipherment
