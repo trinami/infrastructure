@@ -4,9 +4,9 @@ metadata:
   name: deploy-onion
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: tor-controller-crds
-      namespace: flux-system
+#  dependsOn:
+#    - name: tor-controller-crds
+#      namespace: flux-system
   interval: 5m
   path: ./base/nginx/onionservice.yaml
   prune: true
