@@ -13,8 +13,8 @@ spec:
         kind: HelmRepository
         name: tor-controller
       interval: 5m
-      values:
-        installCRDs: false
+#      values:
+#        installCRDs: false
   install:
     remediation:
       retries: 3
