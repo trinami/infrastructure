@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ark
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ark-pvc
+  namespace: ark
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path  # Verwende die k3s lokale StorageClass
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ark-server
+  namespace: ark
+  labels:
+    app: ark-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ark-server
+  template:
+    metadata:
+      labels:
+        app: ark-server
+    spec:
+      containers:
+      - name: ark-server
+        image: hermsi/ark-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7777
+          name: game-client
+          protocol: UDP
+        - containerPort: 7778
+          name: raw-udp-socket
+          protocol: UDP
+        - containerPort: 27020
+          name: rcon-management
+          protocol: TCP
+        - containerPort: 27015
+          name: steam-server
+          protocol: UDP
+        env:
+        - name: SESSION_NAME
+          value: "Trinami ARK Server"
+        - name: SERVER_MAP
+          value: "TheIsland"
+        - name: SERVER_PASSWORD
+          value: "112233"
+        - name: ADMIN_PASSWORD
+          value: "1q2w3e4r"
+        - name: MAX_PLAYERS
+          value: "10"
+        - name: UPDATE_ON_START
+          value: "false"
+        - name: BACKUP_ON_STOP
+          value: "false"
+        - name: PRE_UPDATE_BACKUP
+          value: "true"
+        - name: WARN_ON_STOP
+          value: "true"
+        volumeMounts:
+        - name: ark-storage
+          mountPath: /app                # Erstes Mount Ziel
+        - name: ark-storage
+          mountPath: /home/steam/ARK-Backups   # Zweites Mount Ziel
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker-4-qim
+      volumes:
+      - name: ark-storage
+        persistentVolumeClaim:
+          claimName: ark-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ark-server
+  namespace: ark
+spec:
+  selector:
+    app: ark-server
+  ports:
+  - name: game-client
+    port: 7777
+    protocol: UDP
+    targetPort: 7777
+  - name: raw-udp-socket
+    port: 7778
+    protocol: UDP
+    targetPort: 7778
+  - name: rcon-management
+    port: 27020
+    protocol: TCP
+    targetPort: 27020
+  - name: steam-server
+    port: 27015
+    protocol: UDP
+    targetPort: 27015
+  type: LoadBalancer
