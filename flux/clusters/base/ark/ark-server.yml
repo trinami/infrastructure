@@ -4,7 +4,7 @@ metadata:
   name: ark
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: PersistentVolumeClaim 
 metadata:
   name: ark-pvc
   namespace: ark
